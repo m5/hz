@@ -44,8 +44,9 @@ def parse_parameters(line):
 
 def parse_completed(line):
     try:
-        uri = re.findall(r'\[(.*)\?',line)[0]
-        uri = uri.strip('/')
+        uri_with_put = re.findall(r'\[(.*)\]',line)[0]
+        uri_wo_put = uri_with_put.split('?')[0]
+        uri = uri_wo_put.strip('/')
     except IndexError:
         uri = None
     return {"uri":uri}

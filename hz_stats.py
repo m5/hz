@@ -18,7 +18,7 @@ def get_stats(f):
         for funnel in funnels:
             funnel.pour(history)
             
-    return counts, funnels
+    return counts, funnels, uniques
 
 def write_stats(counts, funnels, today, path='./'):
     stats_temp = Template(filename="stats.mako")
@@ -44,5 +44,5 @@ if __name__ == "__main__":
         path = "./"
     
     f = open(filename)
-    counts, funnels = get_stats(f)
+    counts, funnels, uniques = get_stats(f)
     write_stats(counts, funnels, datetime.date.today(), path)
