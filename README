@@ -1,5 +1,13 @@
 Statistics Analyzer for RoR Log files
 
+Installation Notes:
+Requires Mako templates, obtainable via setuptools by:
+easy_install mako
+
+or from:
+http://www.makotemplates.org/
+
+
 Execution:
 ./hz_stats.py <in path> <out path>
 
