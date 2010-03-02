@@ -1,54 +1,68 @@
+import re
+
+
+def gen_regex_test(p):
+    def regex_test(c):
+        for element in c:
+            if type(element) == type(""):
+                matches = re.findall(p,element)
+                if len(matches) > 0:
+                    return True
+        return False
+    return regex_test
+
+
 base = "http://www.heyzap.com"
 
 funnel_paths = [
-    ("Publishers front page",
-        [base,
-           [base+"/publishers/new_site",
-              [base+"/publishers/get_embed",
-               ]
-            ]
-         ],
-     ),
-    ("Developer front page",
-        [base,
-           [base+"/developers",
-              [base+"/developers/new_game",
-               base+"/developers/import_games",
-               base+"/developers/new_inventory_item",
-               base+"/developers/upload_game_simple",
-               ],
-            ]
-         ],
-     ),
+{"name": "Publishers front page",
+ "test": base,
+ "next":[{"name":"new_site",
+          "test":base+"/publishers/new_site",
+          "next":[{"name":"get_embed",
+                   "test":gen_regex_test(base+"/publishers/get_embed/\w*$"),
+                   "next":[]
+                   }]
+          }]
+ },
+{"name": "Developer front page",
+ "test": base,
+ "next":[{"name":"developers",
+          "test":base+"/developers",
+          "next":[{"name":"new_game",
+                   "test":base+"/developers/new_game",
+                   "next":[]
+                   },
+                  {"name":"import_games",
+                   "test":base+"/developers/import_games",
+                   "next":[]
+                   },
+                  {"name":"upload_game_simple",
+                   "test":base+"/developers/upload_game_simple",
+                   "next":[]
+                   }]
+          }]
+ }
 ]
-
-
+ 
 class Funnel(object):
-    def __init__(self, funnel_path, name=None):
+    def __init__(self, funnel_path):
         self.count = 0
+        self.name = funnel_path["name"]
         
-        if isinstance(funnel_path,list):
-            self.uri = funnel_path[0]
+        test = funnel_path["test"]
+        if hasattr(test,"__call__"):
+            self.test = test
         else:
-            self.uri = funnel_path
-    
-        self.children = []
-        if not name:
-            name = self.uri
-        self.name = name
-
-        try:
-            if isinstance(funnel_path,list):
-              for next_step in funnel_path[1:]:
-                  child = Funnel((next_step))
-                  self.children.append(child)
-        except IndexError:
-            pass
+            self.test = lambda s: test in s
+            
+        self.children = [Funnel(path) for path in funnel_path["next"]]
 
     def pour(self, history):
-        if self.uri in history:
+        if self.test(history):
             self.count += 1
             for child in self.children:
                 child.pour(history)
 
-funnels = [Funnel(path,name=name) for name,path in funnel_paths]
+
+funnels = [Funnel(path) for path in funnel_paths]
