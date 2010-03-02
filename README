@@ -1,0 +1,6 @@
+Statistics Analyzer for RoR Log files
+
+Execution:
+./hz_stats.py <in path> <out path>
+
+The most recent logfile in "in path" will be parsed, and statistics will be filed under the current date in "out path".
