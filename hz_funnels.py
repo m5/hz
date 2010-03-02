@@ -48,7 +48,7 @@ class Funnel(object):
     def pour(self, history):
         if self.uri in history:
             self.count += 1
-        for child in self.children:
-            child.pour(history)
+            for child in self.children:
+                child.pour(history)
 
 funnels = [Funnel(path,name=name) for name,path in funnel_paths]
