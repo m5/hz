@@ -4,9 +4,9 @@ counters = {
     "Front Page" :
         [("uri", base)],
     "Payments Page" :
-        [("uri", base+"payments")],
+        [("uri", base+"/payments")],
     "Payments Item Lookup" :
-        [("uri", base+"payments/get_item")],
+        [("uri", base+"/payments/get_item")],
     "Game Plays with Weebly embed key" :
         [("controller", "heyzap"),
          ("action", "index"),
