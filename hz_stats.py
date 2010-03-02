@@ -40,7 +40,7 @@ def write_stats(counts, funnels, today, path='./'):
     html = stats_temp.render(counts=counts,
                              funnels=funnels,
                              today=today_pretty)
-    f = open(path+today_filename,'w')
+    f = open(os.path.join(path,today_filename),'w')
     f.write(html)
     f.close()
     
