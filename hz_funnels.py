@@ -56,12 +56,13 @@ class Funnel(object):
         self.children = [Funnel(path) for path in funnel_path["next"]]
 
     def pour(self, entry):
-        if self.test(history):
-            if self.hits.add(entry["ip"]):
-                self.count += 1
         if entry["ip"] in self.hits:
           for child in self.children:
               child.pour(entry)
+        else:
+          if self.test(history):
+              self.hits.add(entry["ip"])
+              self.count += 1
 
 
 funnels = [Funnel(path) for path in funnel_paths]
