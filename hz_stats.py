@@ -26,11 +26,9 @@ def get_stats(f):
         counts = update_counts(counts, entry)
         if entry["ip"]:
             uniques[entry["ip"]].add(entry["uri"])
+            for funnel in funnels:
+                funnel.pour(entry)
 
-    for ip,history in uniques.iteritems():
-        for funnel in funnels:
-            funnel.pour(history)
-            
     return counts, funnels, uniques
 
 def write_stats(counts, funnels, today, path='./'):

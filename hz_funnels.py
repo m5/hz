@@ -3,12 +3,8 @@ import re
 
 def gen_regex_test(p):
     def regex_test(c):
-        for element in c:
-            if type(element) == type(""):
-                matches = re.findall(p,element)
-                if len(matches) > 0:
-                    return True
-        return False
+        matches = re.findall(p,element)
+        return len(matches) > 0:
     return regex_test
 
 
@@ -49,20 +45,23 @@ class Funnel(object):
     def __init__(self, funnel_path):
         self.count = 0
         self.name = funnel_path["name"]
+        self.hits = set()
         
         test = funnel_path["test"]
         if hasattr(test,"__call__"):
             self.test = test
         else:
-            self.test = lambda s: test in s
+            self.test = lambda s: test == s["uri"]
             
         self.children = [Funnel(path) for path in funnel_path["next"]]
 
-    def pour(self, history):
+    def pour(self, entry):
         if self.test(history):
-            self.count += 1
-            for child in self.children:
-                child.pour(history)
+            if self.hits.add(entry["ip"]):
+                self.count += 1
+        if entry["ip"] in self.hits:
+          for child in self.children:
+              child.pour(entry)
 
 
 funnels = [Funnel(path) for path in funnel_paths]
