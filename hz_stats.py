@@ -25,11 +25,10 @@ def get_stats(f):
     for entry in get_entries(f):
         counts = update_counts(counts, entry)
         if entry["ip"]:
-            uniques[entry["ip"]].add(entry["uri"])
             for funnel in funnels:
                 funnel.pour(entry)
 
-    return counts, funnels, uniques
+    return counts, funnels
 
 def write_stats(counts, funnels, today, path='./'):
     stats_temp = Template(filename="stats.mako")
@@ -64,7 +63,7 @@ if __name__ == "__main__":
         sys.exit
         
     f = open(filename)
-    counts, funnels, uniques = get_stats(f)
+    counts, funnels = get_stats(f)
     write_stats(counts, funnels, datetime.date.today(), out_path)
 
 
